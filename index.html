@@ -231,3 +231,49 @@
   </script>
 </body>
 </html>
+<div id="contact" class="contact">
+  <div class="left">
+    <div>
+      <strong style="display:block;margin-bottom:6px">Send me a message</strong>
+      <form id="contactForm" onsubmit="return sendMail();">
+        <input type="email" id="senderEmail" placeholder="Your email" required style="margin-bottom:8px">
+        <textarea id="senderMessage" placeholder="Your message" rows="4" required></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button type="submit" class="btn" style="background:linear-gradient(45deg,var(--neon-1),var(--neon-2));color:#041018">Send Message</button>
+          <button type="button" class="copy-btn" id="copyDiscord">Copy Discord DM</button>
+        </div>
+      </form>
+      <div style="color:var(--muted);font-size:13px;margin-top:8px">Discord DM: <strong id="discordHandle">root_sadaf</strong></div>
+    </div>
+  </div>
+
+  <div style="text-align:right">
+    <a class="btn youtube" href="https://youtube.com/@its_sadaf_officail?si=z4zx_MTJrewNHMbb" target="_blank" rel="noopener noreferrer">YouTube</a>
+  </div>
+</div>
+
+<script>
+  // contact form: open user's mail client with prefilled mail to sadafsajin1@gmail.com
+  function sendMail(){
+    const email = document.getElementById('senderEmail').value.trim();
+    const msg = document.getElementById('senderMessage').value.trim();
+    if(!email || !msg) return false;
+    const subject = encodeURIComponent('Website message from ' + email);
+    const body = encodeURIComponent('Email: ' + email + '\n\nMessage:\n' + msg);
+    const mailto = 'mailto:sadafsajin1@gmail.com?subject=' + subject + '&body=' + body;
+    window.location.href = mailto;
+    return false; // prevent actual form submit
+  }
+
+  // copy discord handle
+  document.getElementById('copyDiscord').addEventListener('click', ()=>{
+    const handle = document.getElementById('discordHandle').innerText;
+    navigator.clipboard.writeText(handle).then(()=>{
+      const btn = document.getElementById('copyDiscord');
+      const old = btn.innerText;
+      btn.innerText = 'Copied!';
+      setTimeout(()=> btn.innerText = old, 1600);
+    }).catch(()=>alert('Copy failed — please select and copy manually.'));
+  });
+</script>
+
