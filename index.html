@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SadaF — Coder, Hacker & Editor</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#05060a;
+      --panel:#0f1116;
+      --neon-1:#00f6ff;
+      --neon-2:#7b2cff;
+      --accent:#ff5ca8;
+      --muted:#9aa3b2;
+    }
+    html,body{height:100%;font-family:Inter,Ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;margin:0;background:radial-gradient(1200px 600px at 10% 10%, rgba(123,44,255,0.08), transparent), radial-gradient(900px 400px at 90% 90%, rgba(0,246,255,0.06), transparent), var(--bg);color:#e6eef6}
+
+    .grid-wrap{position:fixed;inset:0;pointer-events:none;overflow:hidden;mix-blend-mode:overlay}
+    .grid{position:absolute;inset:-20%  -20%;background-image:linear-gradient(transparent 50%, rgba(255,255,255,0.02) 50%), linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.02) 50%);background-size:60px 60px,60px 60px;opacity:0.12;transform:rotate(-8deg);filter:blur(6px)}
+
+    .wrap{max-width:1100px;margin:40px auto;padding:28px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 6px 40px rgba(2,4,9,0.6);border:1px solid rgba(255,255,255,0.03)}
+
+    header{display:flex;align-items:center;justify-content:space-between;padding:10px 6px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;background:linear-gradient(135deg,var(--neon-1),var(--neon-2));display:grid;place-items:center;border-radius:12px;box-shadow:0 6px 28px rgba(123,44,255,0.12),0 0 24px rgba(0,246,255,0.06) inset;font-weight:700;color:#061017}
+    .title h1{font-size:20px;letter-spacing:0.6px}
+    .title p{font-size:12px;color:var(--muted);margin-top:4px}
+
+    nav{display:flex;gap:12px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border-radius:10px;text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#e8f9ff}
+    .btn.ghost{background:transparent}
+    .btn.youtube{background:linear-gradient(45deg,#ff0000,#ff5ca8);color:#fff;box-shadow:0 8px 30px rgba(255,92,168,0.08);border:none}
+    .btn:hover{transform:translateY(-3px);transition:all .22s ease}
+
+    .hero{display:flex;gap:28px;align-items:center;padding:36px 12px}
+    .hero-left{flex:1}
+    .hero-right{width:320px}
+    h2.name{font-size:48px;line-height:1;text-shadow:0 6px 30px rgba(123,44,255,0.12);color:var(--neon-1)}
+    .glow{color:var(--neon-1);text-shadow:0 8px 32px rgba(0,246,255,0.14),0 0 10px rgba(123,44,255,0.06)}
+    p.lead{margin-top:12px;color:var(--muted);font-size:16px}
+
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.007));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 30px rgba(2,4,9,0.6)}
+    .stats{display:flex;gap:12px;margin-top:16px}
+    .stat{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));text-align:center}
+    .stat h3{font-size:18px}
+    .stat p{color:var(--muted);font-size:12px}
+
+    .projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px}
+    .project{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.03)}
+    .project h4{margin-bottom:10px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{padding:6px 8px;border-radius:8px;font-size:12px;background:rgba(255,255,255,0.02);color:var(--muted)}
+
+    .contact{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-top:22px;padding:12px}
+    .contact .left{display:flex;gap:12px;align-items:center}
+    .discord-bubble{padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,var(--neon-1),var(--neon-2));color:#041018;font-weight:700;display:inline-flex;align-items:center;gap:8px}
+
+    form input, form textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.02);color:#eaf6ff}
+    form button{padding:10px 14px;border-radius:8px;border:none;font-weight:700}
+
+    @media(max-width:880px){
+      .hero{flex-direction:column;align-items:flex-start}
+      .hero-right{width:100%}
+      h2.name{font-size:36px}
+    }
+
+    .pulse{position:relative}
+    .pulse::after{content:"";position:absolute;inset:-8px;border-radius:12px;background:radial-gradient(circle at center, rgba(0,246,255,0.08), transparent 30%);filter:blur(12px);opacity:0.9;z-index:-1;animation:pulse 3s infinite}
+    @keyframes pulse{0%{transform:scale(0.98);opacity:0.7}50%{transform:scale(1.03);opacity:1}100%{transform:scale(0.98);opacity:0.7}}
+
+    .copy-btn{cursor:pointer;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04)}
+  </style>
+</head>
+<body>
+  <div class="grid-wrap"><div class="grid"></div></div>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">Sa</div>
+        <div class="title">
+          <h1>SadaF</h1>
+          <p>coder, hacker & editor</p>
+        </div>
+      </div>
+
+      <nav>
+        <a class="btn ghost" href="#projects">Projects</a>
+        <a class="btn ghost" href="#about">About</a>
+        <a class="btn youtube" href="https://youtube.com/@its_sadaf_officail?si=z4zx_MTJrewNHMbb" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left">
+        <h2 class="name glow">SadaF</h2>
+        <p class="lead">I build tools, servers and scripts — a coder, hacker, and editor focused on game server systems, automation and ethical security research.</p>
+
+        <div class="card pulse" style="margin-top:18px;max-width:680px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <strong style="font-size:14px">Current Focus</strong>
+              <div style="color:var(--muted);font-size:13px;margin-top:6px">Custom server stacks, bot automation, security tooling, video editing and content creation.</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:800;font-size:20px">H4CK</div>
+              <div style="color:var(--muted);font-size:12px">alias</div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <h3>12+</h3>
+              <p>Projects</p>
+            </div>
+            <div class="stat">
+              <h3>3</h3>
+              <p>Active Bots</p>
+            </div>
+            <div class="stat">
+              <h3>Discord</h3>
+              <p>DM: <strong>root_sadaf</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-right">
+        <div class="card">
+          <strong>Quick Links</strong>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+            <a class="btn" href="#projects">View Projects</a>
+            <a class="btn youtube" href="https://youtube.com/@its_sadaf_officail?si=z4zx_MTJrewNHMbb" target="_blank" rel="noopener noreferrer">YouTube Channel</a>
+            <a class="btn" href="#contact">Contact</a>
+          </div>
+
+          <div style="margin-top:14px">
+            <strong style="display:block;margin-bottom:8px">Skills</strong>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">Bash</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">Networking</span>
+              <span class="tag">Security</span>
+              <span class="tag">Video Edit</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="projects">
+      <h3 style="margin-bottom:12px">Selected Projects</h3>
+      <div class="projects">
+        <div class="project card">
+          <h4>Game Server Automator</h4>
+          <p style="color:var(--muted);font-size:13px">Auto-deploy scripts, mod managers and monitoring for Minecraft & DC servers.</p>
+          <div style="margin-top:10px" class="tags"><span class="tag">Bash</span><span class="tag">Ansible</span></div>
+        </div>
+
+        <div class="project card">
+          <h4>Security Tooling Suite</h4>
+          <p style="color:var(--muted);font-size:13px">A collection of learning tools for packet analysis & fuzzing (educational use).</p>
+          <div style="margin-top:10px" class="tags"><span class="tag">Python</span><span class="tag">Scapy</span></div>
+        </div>
+
+        <div class="project card">
+          <h4>Bot Farm</h4>
+          <p style="color:var(--muted);font-size:13px">Small automation bots for monitoring and community tasks (deployed to VPS).</p>
+          <div style="margin-top:10px" class="tags"><span class="tag">Node</span><span class="tag">Docker</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" style="margin-top:18px">
+      <div class="card">
+        <h3>About</h3>
+        <p style="margin-top:8px;color:var(--muted)">Hi — I'm <strong>SadaF</strong>. I tinker with code, automate servers, edit videos, and explore security tools to learn how systems behave. My work is oriented toward practical projects: game hosting, automation, tooling and content creation. All research is done responsibly and for learning; I do not engage in illegal activity.</p>
+      </div>
+
+      <div id="contact" class="contact">
+        <div class="left">
+          <div>
+            <strong style="display:block;margin-bottom:6px">Send me a message</strong>
+            <form id="contactForm" onsubmit="return sendMail();">
+              <input type="text" id="senderName" placeholder="Your name" required style="margin-bottom:8px">
+              <input type="email" id="senderEmail" placeholder="Your email" required style="margin-bottom:8px">
+              <textarea id="senderMessage" placeholder="Your message" rows="4" required></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button type="submit" class="btn" style="background:linear-gradient(45deg,var(--neon-1),var(--neon-2));color:#041018">Send Message</button>
+                <button type="button" class="copy-btn" id="copyDiscord">Copy Discord DM</button>
+              </div>
+            </form>
+            <div style="color:var(--muted);font-size:13px;margin-top:8px">Discord DM: <strong id="discordHandle">root_sadaf</strong></div>
+          </div>
+        </div>
+
+        <div style="text-align:right">
+          <a class="btn youtube" href="https://youtube.com/@its_sadaf_officail?si=z4zx_MTJrewNHMbb" target="_blank" rel="noopener noreferrer">YouTube</a>
+        </div>
+      </div>
+    </section>
+
+    <footer style="margin-top:18px;padding:14px;text-align:center;color:var(--muted)">© 2025 SadaF • coder, hacker & editor • Built with <span style="color:var(--accent)">neon</span></footer>
+  </div>
+
+  <script>
+    // contact form: open user's mail client with prefilled mail to sadafsajin1@gmail.com
+    function sendMail(){
+      const name = document.getElementById('senderName').value.trim();
+      const email = document.getElementById('senderEmail').value.trim();
+      const msg = document.getElementById('senderMessage').value.trim();
+      if(!name||!email||!msg) return false;
+      const subject = encodeURIComponent('Website message from ' + name);
+      const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + msg);
+      const mailto = 'mailto:sadafsajin1@gmail.com?subject=' + subject + '&body=' + body;
+      window.location.href = mailto;
+      return false; // prevent actual form submit
+    }
+
+    // copy discord handle
+    document.getElementById('copyDiscord').addEventListener('click', ()=>{
+      const handle = document.getElementById('discordHandle').innerText;
+      navigator.clipboard.writeText(handle).then(()=>{
+        const btn = document.getElementById('copyDiscord');
+        const old = btn.innerText;
+        btn.innerText = 'Copied!';
+        setTimeout(()=> btn.innerText = old, 1600);
+      }).catch(()=>alert('Copy failed — please select and copy manually.'))
+    });
+  </script>
+</body>
+</html>
